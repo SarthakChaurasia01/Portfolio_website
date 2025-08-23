@@ -9,17 +9,82 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <style>
+    :root {
+      --bg-light: #f5f7fa;
+      --text-light: #222;
+      --card-light: rgba(255, 255, 255, 0.7);
+      --bg-dark: #0d1117;
+      --text-dark: #f0f6fc;
+      --card-dark: rgba(22, 27, 34, 0.7);
+    }
     html {
       scroll-behavior: smooth;
     }
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.4s ease, color 0.4s ease;
     }
-    .hero-bg {
-      background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
     }
-    .card-hover {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      transition: background 0.4s;
+    }
+    body.dark-mode header {
+      background: rgba(22, 27, 34, 0.6);
+    }
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: 500;
+      color: inherit;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #3b82f6;
+    }
+    .dark-toggle {
+      cursor: pointer;
+      font-size: 1.5rem;
+      margin-left: 1rem;
+    }
+    section {
+      padding: 5rem 2rem;
+      text-align: center;
+      transition: background 0.4s, color 0.4s;
+    }
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: conic-gradient(at 50% 50%, #6ee7b7, #3b82f6, #9333ea);
+      color: white;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+    .card {
+      background: var(--card-light);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      margin: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s;
+    }
+    body.dark-mode .card {
+      background: var(--card-dark);
     }
     .card-hover:hover {
       transform: translateY(-10px);
@@ -28,7 +93,7 @@
     .skill-chip {
       transition: transform 0.3s ease, background-color 0.3s ease;
       font-weight: bold;
-      font-size: 1.125rem; /* text-lg */
+      font-size: 1.125rem;
       text-transform: capitalize;
     }
     .skill-chip:hover {
@@ -45,7 +110,6 @@
       margin: 10px auto;
       border-radius: 2px;
     }
-    /* Updated Timeline Styles (removed 3D transforms for clarity) */
     .timeline {
       position: relative;
       padding: 20px 0;
@@ -58,15 +122,18 @@
       width: 100%;
       max-width: 700px;
       margin-bottom: 40px;
-      background: #fff;
+      background: var(--card-light);
       padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 6px 10px rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.4s;
+    }
+    body.dark-mode .timeline-item {
+      background: var(--card-dark);
     }
     .timeline-item:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 8px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     }
     .timeline-item::before {
       content: '';
@@ -81,29 +148,44 @@
       transform: translate(-50%, -50%);
       z-index: 2;
     }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background: var(--bg-light);
+      transition: background 0.4s;
+    }
+    body.dark-mode footer {
+      background: var(--bg-dark);
+    }
+    body.dark-mode .text-gray-600,
+    body.dark-mode .text-gray-700 {
+      color: var(--text-dark);
+    }
+    body.dark-mode .bg-gray-100 {
+      background: var(--card-dark);
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body>
   <!-- Navbar -->
-  <nav class="bg-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-extrabold text-blue-600">Sarthak Chaurasia</h1>
-      <div class="space-x-6">
-        <a href="#hero" class="text-gray-700 hover:text-blue-600 transition font-medium">Home</a>
-        <a href="#about" class="text-gray-700 hover:text-blue-600 transition font-medium">About</a>
-        <a href="#skills" class="text-gray-700 hover:text-blue-600 transition font-medium">Skills</a>
-        <a href="#projects" class="text-gray-700 hover:text-blue-600 transition font-medium">Projects</a>
-        <a href="#leadership" class="text-gray-700 hover:text-blue-600 transition font-medium">Leadership</a>
-        <a href="#education" class="text-gray-700 hover:text-blue-600 transition font-medium">Education</a>
-        <a href="#contact" class="text-gray-700 hover:text-blue-600 transition font-medium">Contact</a>
-      </div>
-    </div>
-  </nav>
+  <header>
+    <div class="logo text-2xl font-extrabold text-blue-600">Sarthak Chaurasia</div>
+    <nav>
+      <a href="#hero">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#leadership">Leadership</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+      <span id="toggleDark" class="dark-toggle">🌙</span>
+    </nav>
+  </header>
 
   <!-- Hero Section -->
-  <section id="hero" class="hero-bg text-white py-24 text-center">
+  <section id="hero">
     <div class="max-w-5xl mx-auto px-4">
-      <h1 class="text-5xl font-extrabold mb-4">Sarthak Chaurasia</h1>
+      <h1 class="text-5xl font-extrabold mb-4">Hi, I'm Sarthak 👋</h1>
       <p class="text-xl mb-6">
         I'm a <span id="typed" class="text-yellow-300 font-semibold"></span>
       </p>
@@ -126,9 +208,7 @@
   <section id="about" class="max-w-5xl mx-auto py-20 px-4 text-center">
     <h2 class="text-3xl font-bold mb-6 section-title">About Me</h2>
     <div class="flex flex-col md:flex-row items-center gap-8 text-left">
-      <img src="sarthak.jpg"
-           alt="Sarthak Chaurasia"
-           class="w-40 h-40 rounded-full object-cover shadow-lg mx-auto md:mx-0" />
+      <img src="sarthak.jpg" alt="Sarthak Chaurasia" class="w-40 h-40 rounded-full object-cover shadow-lg mx-auto md:mx-0" />
       <p class="text-lg text-gray-700">
         I'm a passionate Machine Learning Engineer dedicated to building intelligent systems and data-driven applications.
         With a strong foundation in AI and data science, I thrive on solving complex problems and creating impactful solutions.
@@ -137,40 +217,39 @@
   </section>
 
   <!-- Skills -->
-  <section id="skills" class="bg-blue-50 py-20 px-4">
+  <section id="skills" class="py-20 px-4">
     <div class="max-w-5xl mx-auto text-center">
       <h2 class="text-3xl font-bold mb-6 section-title">Skills</h2>
       <div class="flex flex-wrap justify-center gap-4">
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">Python</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">Machine Learning</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">Deep Learning</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">TensorFlow</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">scikit-learn</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">Pandas</span>
-        <span class="px-4 py-2 bg-white rounded-full shadow skill-chip">Data Visualization</span>
+        <span class="px-4 py-2 card skill-chip">Python</span>
+        <span class="px-4 py-2 card skill-chip">Machine Learning</span>
+        <span class="px-4 py-2 card skill-chip">Deep Learning</span>
+        <span class="px-4 py-2 card skill-chip">TensorFlow</span>
+        <span class="px-4 py-2 card skill-chip">scikit-learn</span>
+        <span class="px-4 py-2 card skill-chip">Pandas</span>
+        <span class="px-4 py-2 card skill-chip">Data Visualization</span>
       </div>
     </div>
   </section>
 
   <!-- Projects -->
-  <section id="projects" class="py-16 px-6 md:px-20 bg-gray-50 text-gray-900">
+  <section id="projects" class="py-16 px-6 md:px-20">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl font-bold mb-12 text-center">My Projects</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <h2 class="text-4xl font-bold mb-12 text-center section-title">My Projects</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Project 1 -->
-        <div class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl">
-          <img src="Untitled design (1).jpg" alt="Dog Breed Classifier"
-               class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          <div class="p-6">
+        <div class="card card-hover group flex flex-col h-[480px]">
+          <img src="Untitled design (1).jpg" alt="Dog Breed Classifier" class="h-48 w-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+          <div class="p-6 flex flex-col flex-grow">
             <h3 class="text-xl font-semibold mb-2">Dog Breed Classifier</h3>
-            <p class="text-gray-600 text-sm mb-2">A neural network image classifier that detects dog breeds using TensorFlow & transfer learning.</p>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">A neural network image classifier that detects dog breeds using TensorFlow & transfer learning.</p>
             <div class="flex flex-wrap gap-2 mb-4">
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">TensorFlow</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Keras</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Google Colab</button>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">TensorFlow</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Keras</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Google Colab</span>
             </div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 mt-auto">
               <a href="https://colab.research.google.com/github/SarthakChaurasia01/Dog-Breed-Classifier/blob/main/dog_breed_classifier.ipynb" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
                 🔗 Demo
               </a>
@@ -181,19 +260,18 @@
           </div>
         </div>
         <!-- Project 2 -->
-        <div class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl">
-          <img src="Untitled design (2).jpg" alt="Chest X-ray Classifier"
-               class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          <div class="p-6">
+        <div class="card card-hover group flex flex-col h-[480px]">
+          <img src="Untitled design (2).jpg" alt="Chest X-ray Classifier" class="h-48 w-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+          <div class="p-6 flex flex-col flex-grow">
             <h3 class="text-xl font-semibold mb-2">Chest X-ray Classifier</h3>
-            <p class="text-gray-600 text-sm mb-2">A model to classify chest X-rays into Normal, Pneumonia, or COVID-19 using MobileNetV2.</p>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">A model to classify chest X-rays into Normal, Pneumonia, or COVID-19 using MobileNetV2.</p>
             <div class="flex flex-wrap gap-2 mb-4">
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">TensorFlow</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">MobileNetV2</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Google Colab</button>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">TensorFlow</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">MobileNetV2</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Google Colab</span>
             </div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 mt-auto">
               <a href="https://chest-xray-diagnosis-app-qjfuax28nysovbeoof89qc.streamlit.app/" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
                 🔗 Demo
               </a>
@@ -204,19 +282,18 @@
           </div>
         </div>
         <!-- Project 3 -->
-        <div class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl">
-          <img src="Untitled design (3).jpg" alt="Bulldozer Price Prediction"
-               class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          <div class="p-6">
+        <div class="card card-hover group flex flex-col h-[480px]">
+          <img src="Untitled design (3).jpg" alt="Bulldozer Price Prediction" class="h-48 w-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+          <div class="p-6 flex flex-col flex-grow">
             <h3 class="text-xl font-semibold mb-2">Bulldozer Price Prediction</h3>
-            <p class="text-gray-600 text-sm mb-2">Regression model predicting bulldozer auction prices using historical Kaggle data.</p>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">Regression model predicting bulldozer auction prices using historical Kaggle data.</p>
             <div class="flex flex-wrap gap-2 mb-4">
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Pandas</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Scikit-learn</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Matplotlib</button>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Pandas</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Scikit-learn</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Matplotlib</span>
             </div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 mt-auto">
               <a href="https://bulldozer-price-regression-app-hswhabkttwg7gmthneoawr.streamlit.app/" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
                 🔗 Demo
               </a>
@@ -227,19 +304,18 @@
           </div>
         </div>
         <!-- Project 4 -->
-        <div class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all hover:shadow-xl">
-          <img src="dataset-cover.jpg" alt="Heart Disease Classification"
-               class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          <div class="p-6">
+        <div class="card card-hover group flex flex-col h-[480px]">
+          <img src="dataset-cover.jpg" alt="Heart Disease Classification" class="h-48 w-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+          <div class="p-6 flex flex-col flex-grow">
             <h3 class="text-xl font-semibold mb-2">Heart Disease Classification</h3>
-            <p class="text-gray-600 text-sm mb-2">Predicts the likelihood of heart disease using classification techniques on structured data.</p>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">Predicts the likelihood of heart disease using classification techniques on structured data.</p>
             <div class="flex flex-wrap gap-2 mb-4">
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Scikit-learn</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Pandas</button>
-              <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Seaborn</button>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Python</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Scikit-learn</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Pandas</span>
+              <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 transition">Seaborn</span>
             </div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 mt-auto">
               <a href="https://heart-disease-app-uqtmvogrxxwrrwrritrpcv.streamlit.app/" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">
                 🔗 Demo
               </a>
@@ -254,11 +330,10 @@
   </section>
 
   <!-- Leadership & Involvement -->
-  <section id="leadership" class="py-16 px-6 md:px-20 bg-gray-50 text-gray-900">
+  <section id="leadership" class="py-16 px-6 md:px-20">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-4xl font-bold mb-12 text-center section-title">Leadership & Involvement</h2>
       <div class="timeline">
-        <!-- Item 1 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">🏆</span> School Topper – BHEL Haridwar</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -266,7 +341,6 @@
             <li>Recognized for scoring highest marks in board exams and representing the school academically.</li>
           </ul>
         </div>
-        <!-- Item 2 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">🤖</span> Lead – College Admission Chatbot using IBM Watson</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -274,7 +348,6 @@
             <li>Worked with teachers and students to make sure the chatbot was useful and easy to use.</li>
           </ul>
         </div>
-        <!-- Item 3 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">📊</span> Team Lead – IBM Data Analytics Project</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -282,7 +355,6 @@
             <li>Divided the work among team members and helped in building data visualizations and final presentation.</li>
           </ul>
         </div>
-        <!-- Item 4 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">💻</span> Participant – Blind Coding Hackathon</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -290,7 +362,6 @@
             <li>Improved focus and logic-building skills by solving coding problems from memory.</li>
           </ul>
         </div>
-        <!-- Item 5 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">🏅</span> Runner-Up – RIT-A-Thon Hackathon</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -298,7 +369,6 @@
             <li>Helped plan the idea and worked on designing and presenting the solution.</li>
           </ul>
         </div>
-        <!-- Item 6 -->
         <div class="timeline-item">
           <h3 class="text-xl font-semibold mb-2 flex items-center"><span class="mr-2 text-blue-600">🧑‍🏫</span> Peer Support – Python & ML</h3>
           <ul class="list-disc pl-5 text-gray-600 text-sm">
@@ -311,7 +381,7 @@
   </section>
 
   <!-- Education -->
-  <section id="education" class="bg-blue-50 py-20 px-4">
+  <section id="education" class="py-20 px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-3xl font-bold mb-6 section-title">Education</h2>
       <p class="text-lg text-gray-700 mb-2">
@@ -330,27 +400,23 @@
   </section>
 
   <!-- Get in Touch -->
-  <section id="contact" class="bg-[#f9f9f9] py-16 px-6 text-center">
-    <h2 class="text-3xl font-bold mb-8 text-gray-800">Get in touch</h2>
-    <p class="text-gray-600 mb-10 text-lg max-w-xl mx-auto">I’m open for new opportunities – especially ambitious or large projects. However, my inbox is always open. Whether you have a question or just want to say hi, I’ll try my best to get back to you!</p>
+  <section id="contact" class="py-16 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-8 section-title">Get in Touch</h2>
+    <p class="text-gray-600 mb-10 text-lg max-w-xl mx-auto">I’m open for new opportunities – especially ambitious or large projects. Whether you have a question or just want to say hi, I’ll try my best to get back to you!</p>
     <div class="flex justify-center flex-wrap gap-4">
-      <!-- GitHub -->
-      <a href="https://github.com/SarthakChaurasia01" target="_blank" class="flex items-center gap-2 bg-white text-gray-800 px-5 py-3 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.375.5 0 5.875 0 12.5c0 5.3 3.438 9.8 8.2 11.4.6.113.8-.263.8-.587 0-.288-.012-1.238-.012-2.25-3.338.737-4.037-1.613-4.037-1.613-.55-1.388-1.338-1.75-1.338-1.75-1.1-.75.087-.737.087-.737 1.213.087 1.85 1.238 1.85 1.238 1.075 1.85 2.812 1.313 3.487 1 .113-.775.425-1.312.775-1.613-2.662-.3-5.462-1.337-5.462-5.962 0-1.313.462-2.388 1.225-3.237-.112-.3-.525-1.513.112-3.15 0 0 1-.325 3.3 1.225a11.5 11.5 0 0 1 3-.4c1.012.012 2.037.138 3 .4C17 4.95 18 5.275 18 5.275c.637 1.637.225 2.85.112 3.15.75.85 1.225 1.925 1.225 3.237 0 4.638-2.812 5.662-5.487 5.962.438.375.837 1.1.837 2.237 0 1.612-.012 2.912-.012 3.3 0 .312.2.7.8.587C20.562 22.3 24 17.8 24 12.5 24 5.875 18.625.5 12 .5Z"/></svg>
+      <a href="https://github.com/SarthakChaurasia01" target="_blank" class="card flex items-center gap-2 px-5 py-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.375.5 0 5.875 0 12.5c0 5.3 3.438 9.8 8.2 11.4.6.113.8-.263.8-.587 0-.288-.012-1.238-.012-2.25-3.338.737-4.037-1.613-4.037-1.613-.55-1.388-1.338-1.75-1.338-1.75-1.1-.75.087-.737.087-.737 1.213.087 1.85 1.238 1.85 1.238 1.075 1.85 2.812 1.313 3.487 1 .113-.775.425-1.312.775-1.613-2.662-.3-5.462-1.337-5.462-5.962 0-1.313.462-2.388 1.225-3.237-.112-.3-.525-1.513.112-3.15 0 0 1-.325 3.3 1.225a11.5 11.5 0 0 1 3-.4c1.012.012 2.037.138 3 .4C17 4.95 18 5.275 18 5.275c.637 1.637.225 2.85.112 3.15.75.85 1.225 1.925 1.225 3.237 0 4.638-2.812 5.662-5.487 5.962.438.375.837 1.1.837 2.237 0 1.612-.012 2.912-.012 3.3 0 .312.2.7.8.587C20.562 22.3 24 17.8 24 12.5 24 5.875 18.625.5 12 .5Z"/></svg>
         GitHub
       </a>
-      <!-- LinkedIn -->
-      <a href="https://www.linkedin.com/in/sarthak-chaurasia-256392324" target="_blank" class="flex items-center gap-2 bg-white text-gray-800 px-5 py-3 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition">
+      <a href="https://www.linkedin.com/in/sarthak-chaurasia-256392324" target="_blank" class="card flex items-center gap-2 px-5 py-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.3c-1 0-1.7-.8-1.7-1.7s.8-1.7 1.7-1.7c1 0 1.7.8 1.7 1.7s-.7 1.7-1.7 1.7zm13.5 11.3h-3v-5.3c0-1.3-.5-2.1-1.7-2.1-.9 0-1.4.6-1.7 1.2-.1.2-.1.6-.1 1v5.2h-3s.1-8.5 0-9.3h3v1.3c.4-.7 1.1-1.7 2.7-1.7 2 0 3.4 1.3 3.4 4.1v5.6z"/></svg>
         LinkedIn
       </a>
-      <!-- Phone -->
-      <a href="tel:+918279829612" class="flex items-center gap-2 bg-white text-gray-800 px-5 py-3 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition">
+      <a href="tel:+918279829612" class="card flex items-center gap-2 px-5 py-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.7 3.2 4.4 6 7.6 7.6l2.5-2.5c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1v4.2c0 .6-.4 1-1 1-10.5 0-19-8.5-19-19 0-.6.4-1 1-1H6c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1l-2.7 2.5z"/></svg>
         Call Me
       </a>
-      <!-- Email -->
-      <a href="mailto:chaurasia.sarthak08@gmail.com" class="flex items-center gap-2 bg-white text-gray-800 px-5 py-3 rounded-lg shadow-md hover:shadow-lg hover:bg-gray-100 transition">
+      <a href="mailto:chaurasia.sarthak08@gmail.com" class="card flex items-center gap-2 px-5 py-3">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
           <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
         </svg>
@@ -360,21 +426,37 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 text-center">
-    <p class="text-sm">© 2025 Sarthak Chaurasia. All rights reserved.</p>
+  <footer>
+    <p>© 2025 Sarthak Chaurasia. All Rights Reserved.</p>
   </footer>
 
-  <!-- GSAP Animations -->
+  <!-- Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      gsap.registerPlugin(ScrollTrigger);
+      // Dark mode toggle
+      const toggle = document.getElementById("toggleDark");
+      const body = document.body;
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        toggle.textContent = "☀️";
+      }
+      toggle.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) {
+          toggle.textContent = "☀️";
+          localStorage.setItem("theme", "dark");
+        } else {
+          toggle.textContent = "🌙";
+          localStorage.setItem("theme", "light");
+        }
+      });
 
-      // Hero section animation
+      // GSAP animations
+      gsap.registerPlugin(ScrollTrigger);
       gsap.from('#hero h1', { opacity: 0, y: 50, duration: 1, delay: 0.5 });
       gsap.from('#hero p', { opacity: 0, y: 30, duration: 1, delay: 0.8 });
       gsap.from('#hero a', { opacity: 0, scale: 0.8, duration: 1, delay: 1 });
 
-      // Section animations
       const sections = ['#about', '#skills', '#projects', '#leadership', '#education', '#contact'];
       sections.forEach(section => {
         gsap.from(section + ' > div', {
@@ -389,8 +471,7 @@
         });
       });
 
-      // Project card animations
-      gsap.utils.toArray('.group').forEach(card => {
+      gsap.utils.toArray('.card').forEach(card => {
         gsap.from(card, {
           scrollTrigger: {
             trigger: card,
@@ -402,7 +483,6 @@
         });
       });
 
-      // Timeline item animations (updated to avoid rotationX)
       gsap.utils.toArray('.timeline-item').forEach((item, index) => {
         gsap.from(item, {
           scrollTrigger: {
@@ -419,4 +499,3 @@
   </script>
 </body>
 </html>
-
